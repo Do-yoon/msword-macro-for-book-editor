@@ -96,3 +96,35 @@ Sub 영어_단어와_식을_띄우기()
         .Execute Replace:=wdReplaceAll
     End With
 End Sub
+
+Sub 책_제목_괄호_대치()
+    Dim rng As Range
+    Set rng = ActiveDocument.Content
+    
+    ' 왼쪽 괄호 대치: 『 → 《
+    With rng.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "『"
+        .Replacement.Text = "《"
+        .MatchWildcards = False
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    ' 오른쪽 괄호 대치: 』 → 》
+    With rng.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "』"
+        .Replacement.Text = "》"
+        .MatchWildcards = False
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Execute Replace:=wdReplaceAll
+    End With
+    
+    MsgBox "『』 → 《》 로 변환 완료!", vbInformation
+End Sub
+
