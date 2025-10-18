@@ -196,3 +196,32 @@ Sub 본문의_프로그래밍_언어명을_한글로_변환()
 End Sub
 
 
+Sub 장_뒤로_따옴표를_보내자()
+'
+' '10장 어쩌구저쩌구' -> 10장 '어쩌구저쩌구'
+'
+'
+    Dim rng As Range
+    Dim i As Integer
+    Dim pattern As String
+    Dim repl As String
+
+    pattern = "‘([0-9]{1,2})장 "
+    repl = "\1장 '"
+
+    For Each rng In ActiveDocument.StoryRanges
+        With rng.Find
+            .ClearFormatting
+            .Replacement.ClearFormatting
+            .Text = pattern
+            .Replacement.Text = repl
+            .Forward = True
+            .Wrap = wdFindContinue
+            .Format = False
+            .MatchWildcards = True
+            .Execute Replace:=wdReplaceAll
+        End With
+    Next rng
+
+    MsgBox "치환 완료!", vbInformation
+End Sub
