@@ -77,3 +77,22 @@ SkipReplacement:
 End Sub
 
 
+Sub 영어_단어와_식을_띄우기()
+'
+' 예: CASE식 -> CASE 식, '식' 대신 '절' 등에도 적용 가능
+'
+'
+    Dim rng As Range
+    Set rng = ActiveDocument.Content
+    
+    With rng.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = "([A-Z])식"
+        .Replacement.Text = "\1 식"
+        .MatchWildcards = True
+        .Forward = True
+        .Wrap = wdFindContinue
+        .Execute Replace:=wdReplaceAll
+    End With
+End Sub
