@@ -225,3 +225,45 @@ Sub 장_뒤로_따옴표를_보내자()
 
     MsgBox "치환 완료!", vbInformation
 End Sub
+
+Sub 특정_구의_스타일을_바꾸자()
+'
+' 예) ' 절' 의 스타일이 '본문코드'면 기본 단락 글꼴로 변경
+' 주의! 띄어쓰기를 포함하지 않는다면 '!!!!여기!!!!' 주석 아래 줄의 인덱스를 -1에서 0으로 조정할 것
+'
+'
+    Dim story As Range
+    Dim r As Range
+    Dim i As Long
+    Dim targetStyle As String
+    Dim changed As Long
+
+    targetStyle = "본문코드"  ' ← 스타일 창에서 보이는 정확한 이름으로 수정 가능
+
+    For Each story In ActiveDocument.StoryRanges
+        Set r = story.Duplicate
+        With r.Find
+            .ClearFormatting
+            .Text = "[ ^t^s　]문"     ' 일반공백, 탭, non-breaking space(^s), 전각스페이스(　))
+            .MatchWildcards = True
+            .Wrap = wdFindStop
+            .Format = False
+        End With
+
+        Do While r.Find.Execute
+        ' !!!!여기!!!!
+            For i = -1 To r.Characters.Count
+                On Error Resume Next
+                ' 개별 문자 단위로 문자 스타일 확인
+                ' 기본 단락 글꼴로 되돌리기 (언어 무관)
+                r.Characters(i).Style = wdStyleDefaultParagraphFont
+                changed = changed + 1
+                On Error GoTo 0
+            Next i
+            r.Collapse wdCollapseEnd
+        Loop
+    Next story
+
+    MsgBox "‘본문코드’ → 기본 단락 글꼴로 복원된 문자 수: " & changed, vbInformation
+End Sub
+
