@@ -267,3 +267,27 @@ Sub 특정_구의_스타일을_바꾸자()
     MsgBox "‘본문코드’ → 기본 단락 글꼴로 복원된 문자 수: " & changed, vbInformation
 End Sub
 
+Sub ApplyChanges()
+    2             ' 1. 변경 내용 추적 기능 켜기
+    3             If ActiveDocument.TrackRevisions = False Then
+    4                 ActiveDocument.TrackRevisions = True
+    5             End If
+    6 
+    7             ' 2. '찾아 바꾸기' 실행 (변경 내용이 추적됨)
+    8             Call RunFindAndReplace("CASE식", "CASE 식")
+    9             Call RunFindAndReplace("WHERE절", "WHERE 절")
+   10             Call RunFindAndReplace("IF문", "IF 문")
+   11         End Sub
+   12 
+   13         Sub RunFindAndReplace(findText As String, replaceText As String)
+   14             Selection.Find.ClearFormatting
+   15             Selection.Find.Replacement.ClearFormatting
+   16             With Selection.Find
+   17                 .Text = findText
+   18                 .Replacement.Text = replaceText
+   19                 .Forward = True
+   20                 .Wrap = wdFindContinue
+   21                 .MatchCase = True
+   22             End With
+   23             Selection.Find.Execute Replace:=wdReplaceAll
+   24         End Sub
